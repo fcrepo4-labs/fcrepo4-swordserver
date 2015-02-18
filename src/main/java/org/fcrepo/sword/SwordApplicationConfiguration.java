@@ -1,5 +1,5 @@
-/*
- * Copyright 2014 Saxon State and University Library Dresden (SLUB)
+/**
+ * Copyright 2015 DuraSpace, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,18 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.fcrepo.sword;
 
-package de.qucosa.sword.core;
+import io.dropwizard.Configuration;
 
-import org.swordapp.server.*;
-
-public class CollectionDepositManagerImpl implements CollectionDepositManager {
-    @Override
-    public DepositReceipt createNew(
-            String collectionURI,
-            Deposit deposit,
-            AuthCredentials auth,
-            SwordConfiguration config) throws SwordError, SwordServerException, SwordAuthException {
-        throw new UnsupportedOperationException();
-    }
+/**
+ * @author claussni
+ */
+public class SwordApplicationConfiguration extends Configuration {
 }

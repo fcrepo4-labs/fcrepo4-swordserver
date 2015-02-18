@@ -1,5 +1,5 @@
-/*
- * Copyright 2014 Saxon State and University Library Dresden (SLUB)
+/**
+ * Copyright 2015 DuraSpace, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,14 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.fcrepo.sword.health;
 
-package de.qucosa.sword.core;
+import com.codahale.metrics.health.HealthCheck;
 
-import org.swordapp.server.*;
-
-public class ServiceDocumentManagerImpl implements ServiceDocumentManager {
+/**
+ * @author claussni
+ */
+public class DummyHealthCheck extends HealthCheck {
+    /**
+     * @return
+     * @throws Exception
+     */
     @Override
-    public ServiceDocument getServiceDocument(String sdUri, AuthCredentials auth, SwordConfiguration config) throws SwordError, SwordServerException, SwordAuthException {
-        throw new UnsupportedOperationException();
+    protected Result check() throws Exception {
+        return Result.healthy();
     }
 }

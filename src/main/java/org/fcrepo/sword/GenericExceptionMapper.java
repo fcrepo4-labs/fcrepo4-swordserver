@@ -1,5 +1,5 @@
-/*
- * Copyright 2014 Saxon State and University Library Dresden (SLUB)
+/**
+ * Copyright 2015 DuraSpace, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,16 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.fcrepo.sword;
 
-package de.qucosa.sword.core;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.ext.ExceptionMapper;
+import javax.ws.rs.ext.Provider;
 
-import org.apache.abdera.i18n.iri.IRI;
-import org.apache.abdera.model.Feed;
-import org.swordapp.server.*;
-
-public class CollectionListManagerImpl implements CollectionListManager {
+/**
+ * @author claussni
+ */
+@Provider
+public class GenericExceptionMapper implements ExceptionMapper<Throwable> {
+    /**
+     * @param exception
+     * @return
+     */
     @Override
-    public Feed listCollectionContents(IRI collectionIRI, AuthCredentials auth, SwordConfiguration config) throws SwordServerException, SwordAuthException, SwordError {
-        throw new UnsupportedOperationException();
+    public Response toResponse(
+            final Throwable exception) {
+        return Response.serverError().build();
     }
 }
