@@ -1,5 +1,6 @@
 [![Build Status](https://travis-ci.org/fcrepo4-labs/fcrepo4-swordserver.svg)](https://travis-ci.org/fcrepo4-labs/fcrepo4-swordserver)
 
-# Fedora Commons SWORD Server
+# SWORD Provider for Fedora 4
 
-Dropwizard based HTTP Server implementing SWORD v2 protocol server for Fedora Commons Repositories.
+Implements [SWORD 2.0 AtomPub Profile](http://swordapp.org/sword-v2/sword-v2-specifications/) using Fedora Commons 4 as the backend.
+
