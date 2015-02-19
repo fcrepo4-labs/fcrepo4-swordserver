@@ -13,24 +13,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.fcrepo.sword.integration;
+package org.fcrepo.sword.http;
 
+import org.apache.abdera.model.Service;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author claussni
- * @date 19.02.15.
+ * @date 18.02.15.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("/spring-test/test-container.xml")
-public class AbstractSWORDProviderIT {
+@ContextConfiguration("/spring/sword.xml")
+@WebAppConfiguration
+public class SWORDServiceResourceTest {
+
+    @Autowired
+    private SWORDServiceResource webResource;
 
     @Test
-    public void testIt() {
-
+    public void hasSwordVersion2() {
+        final Service service = webResource.serviceDocument();
+        final String v = service.getSimpleExtension(
+                "http://purl.org/net/sword/terms/",
+                "version",
+                "sword");
+        assertEquals("2.0", v);
     }
 
 }
