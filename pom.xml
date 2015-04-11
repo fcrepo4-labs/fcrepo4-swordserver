@@ -7,7 +7,7 @@
   <parent>
     <groupId>org.fcrepo</groupId>
     <artifactId>fcrepo</artifactId>
-    <version>4.1.0</version>
+    <version>LATEST</version>
   </parent>
 
   <artifactId>fcrepo-swordserver</artifactId>
@@ -147,6 +147,12 @@
         <filtering>true</filtering>
       </resource>
     </resources>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+      </plugin>
+    </plugins>
   </build>
 
 </project>
