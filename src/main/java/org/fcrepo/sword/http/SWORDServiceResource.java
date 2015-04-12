@@ -18,7 +18,6 @@ package org.fcrepo.sword.http;
 import org.apache.abdera.Abdera;
 import org.apache.abdera.model.Service;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.GET;
@@ -29,7 +28,6 @@ import javax.ws.rs.Produces;
  * @author claussni
  * @date 18.02.15.
  */
-@Scope("request")
 @Path("/sword")
 @Component
 public class SWORDServiceResource {
