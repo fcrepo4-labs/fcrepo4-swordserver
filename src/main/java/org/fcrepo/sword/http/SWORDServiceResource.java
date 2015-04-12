@@ -28,7 +28,7 @@ import javax.ws.rs.Produces;
  * @author claussni
  * @date 18.02.15.
  */
-@Path("/sword")
+@Path("/fcr:sword")
 @Component
 public class SWORDServiceResource {
 

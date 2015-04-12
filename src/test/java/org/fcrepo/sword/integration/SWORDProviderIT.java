@@ -43,7 +43,7 @@ public class SWORDProviderIT {
 
     protected static final String HOSTNAME = "localhost";
 
-    private static final String SERVICE_NAME = "sword";
+    private static final String SERVICE_NAME = "fcr:sword";
 
     protected static final String serverAddress =
             String.format("http://%s:%s/%s", HOSTNAME, SERVER_PORT, SERVICE_NAME);
