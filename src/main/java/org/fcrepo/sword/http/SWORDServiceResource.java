@@ -26,7 +26,7 @@ import javax.ws.rs.Produces;
 
 /**
  * @author claussni
- * @date 18.02.15.
+ * @since  18.02.15.
  */
 @Path("/fcr:sword")
 @Component
