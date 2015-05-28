@@ -1,6 +1,11 @@
 language: java
 jdk:
   - oraclejdk8
+
+script:
+  - mvn javadoc:jar
+  - mvn javadoc:test-aggregate
+
 notifications:
   irc: "irc.freenode.org#fcrepo"
   email:

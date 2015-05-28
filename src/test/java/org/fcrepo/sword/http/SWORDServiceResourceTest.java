@@ -26,7 +26,7 @@ import static org.junit.Assert.assertEquals;
 
 /**
  * @author claussni
- * @date 18.02.15.
+ * @since 18.02.15.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("/spring/sword.xml")
