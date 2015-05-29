@@ -32,7 +32,7 @@ import static org.junit.Assert.assertTrue;
 
 /**
  * @author claussni
- * @date 19.02.15.
+ * @since 19.02.15.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("/spring-test/test-container.xml")
