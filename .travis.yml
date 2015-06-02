@@ -3,6 +3,7 @@ jdk:
   - oraclejdk8
 
 script:
+  - mvn install -B -V
   - mvn javadoc:jar
   - mvn javadoc:test-aggregate
 
