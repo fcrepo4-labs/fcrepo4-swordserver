@@ -1,12 +1,12 @@
 /**
  * Copyright 2015 DuraSpace, Inc.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,6 +15,9 @@
  */
 package org.fcrepo.sword.integration;
 
+import org.apache.abdera.Abdera;
+import org.apache.abdera.model.Document;
+import org.apache.abdera.model.Service;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
@@ -26,6 +29,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.io.IOException;
+import java.io.InputStream;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -56,7 +60,7 @@ public class SWORDProviderIT {
     }
 
     @Test
-    public void everythingGood() throws IOException {
+    public void fedoraRepositoryIsResponding() throws IOException {
         final HttpGet get = new HttpGet(String.format("http://%s:%s/", HOSTNAME, SERVER_PORT));
         final HttpResponse response = httpClient.execute(get);
         assertStatusCode(200, response);
@@ -69,6 +73,26 @@ public class SWORDProviderIT {
         final HttpResponse response = httpClient.execute(get);
         assertStatusCode(200, response);
         assertContentType("application/atomsvc+xml", response);
+    }
+
+    @Test
+    public void hasSwordVersion2() throws IOException {
+        final HttpGet get = new HttpGet(serverAddress);
+        get.setHeader("Content-Type", "application/svc+xml");
+        final HttpResponse response = httpClient.execute(get);
+
+        Service service = serviceDocumentFromStream(response.getEntity().getContent());
+
+        assertEquals("2.0", service.getSimpleExtension(
+                "http://purl.org/net/sword/terms/",
+                "version",
+                "sword"));
+    }
+
+    private Service serviceDocumentFromStream(final InputStream content) {
+        Abdera abdera = new Abdera();
+        Document<Service> serviceDocument = abdera.getParser().parse(content);
+        return serviceDocument.getRoot();
     }
 
     private void assertStatusCode(final int statusCode, final HttpResponse httpResponse) {

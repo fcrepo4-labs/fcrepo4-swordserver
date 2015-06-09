@@ -12,6 +12,4 @@
 
   <bean id="abdera" class="org.apache.abdera.Abdera"/>
 
-  <bean class="org.fcrepo.http.commons.session.SessionFactory"/>
-
 </beans>
