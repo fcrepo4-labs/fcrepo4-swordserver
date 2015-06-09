@@ -80,9 +80,7 @@ public class SWORDProviderIT {
         final HttpGet get = new HttpGet(serverAddress);
         get.setHeader("Content-Type", "application/svc+xml");
         final HttpResponse response = httpClient.execute(get);
-
-        Service service = serviceDocumentFromStream(response.getEntity().getContent());
-
+        final Service service = serviceDocumentFromStream(response.getEntity().getContent());
         assertEquals("2.0", service.getSimpleExtension(
                 "http://purl.org/net/sword/terms/",
                 "version",
@@ -90,8 +88,8 @@ public class SWORDProviderIT {
     }
 
     private Service serviceDocumentFromStream(final InputStream content) {
-        Abdera abdera = new Abdera();
-        Document<Service> serviceDocument = abdera.getParser().parse(content);
+        final Abdera abdera = new Abdera();
+        final Document<Service> serviceDocument = abdera.getParser().parse(content);
         return serviceDocument.getRoot();
     }
 
