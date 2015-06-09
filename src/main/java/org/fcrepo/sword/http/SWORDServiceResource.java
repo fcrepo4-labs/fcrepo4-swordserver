@@ -15,10 +15,10 @@
  */
 package org.fcrepo.sword.http;
 
-import org.apache.abdera.Abdera;
 import org.apache.abdera.model.Service;
+import org.fcrepo.sword.service.SWORDProviderService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.Scope;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -28,12 +28,12 @@ import javax.ws.rs.Produces;
  * @author claussni
  * @since 18.02.15.
  */
+@Scope("request")
 @Path("/fcr:sword")
-@Component
 public class SWORDServiceResource {
 
     @Autowired
-    private Abdera abdera;
+    private SWORDProviderService providerService;
 
     /**
      * @return Returns a SWORD service document
@@ -41,13 +41,7 @@ public class SWORDServiceResource {
     @GET
     @Produces("application/atomsvc+xml")
     public Service serviceDocument() {
-        final Service service = abdera.newService();
-        service.addSimpleExtension(
-                "http://purl.org/net/sword/terms/",
-                "version",
-                "sword",
-                "2.0");
-        return service;
+        return providerService.serviceDocument();
     }
 
 }
