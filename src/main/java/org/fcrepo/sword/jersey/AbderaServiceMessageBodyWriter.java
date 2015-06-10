@@ -29,7 +29,6 @@ import java.lang.reflect.Type;
 
 /**
  * @author claussni
- * @since 08.03.2015
  */
 @Provider
 public class AbderaServiceMessageBodyWriter implements MessageBodyWriter<Service> {

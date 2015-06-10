@@ -32,7 +32,7 @@ import javax.jcr.Session;
 @Component
 public class SWORDProviderService {
 
-    public static final String NS_SWORD = "http://purl.org/net/sword/";
+    public static final String NS_SWORD   = "http://purl.org/net/sword/";
     public static final String RDF_PREFIX = "sword";
     private final Abdera abdera;
 

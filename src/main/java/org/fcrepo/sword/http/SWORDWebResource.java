@@ -26,7 +26,6 @@ import javax.ws.rs.Produces;
 
 /**
  * @author claussni
- * @since 18.02.15.
  */
 @Scope("request")
 @Path("/fcr:sword")
