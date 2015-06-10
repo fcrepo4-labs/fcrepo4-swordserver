@@ -18,7 +18,11 @@ package org.fcrepo.sword.service;
 import org.apache.abdera.Abdera;
 import org.apache.abdera.model.Service;
 import org.fcrepo.http.commons.session.SessionFactory;
+import org.fcrepo.kernel.services.ContainerService;
+import org.fcrepo.kernel.services.NodeService;
 import org.modeshape.jcr.api.NamespaceRegistry;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -32,50 +36,70 @@ import javax.jcr.Session;
 @Component
 public class SWORDProviderService {
 
-    public static final String NS_SWORD   = "http://purl.org/net/sword/";
-    public static final String RDF_PREFIX = "sword";
-    private final Abdera abdera;
+    public static final  String NS_SWORD               = "http://purl.org/net/sword/";
+    public static final  String NS_SWORD_TERMS         = "http://purl.org/net/sword/terms/";
+    public static final  String RDF_PREFIX             = "sword";
+    public static final  String SWORD_ROOT_PATH        = "/sword";
+    public static final  String SWORD_COLLECTIONS_PATH = SWORD_ROOT_PATH + "/collections";
+    public static final  String SWORD_WORKSPACES_PATH  = SWORD_ROOT_PATH + "/workspaces";
+    private static final Logger log                    = LoggerFactory.getLogger(SWORDProviderService.class);
+    private final        Abdera abdera                 = new Abdera();
 
     @Autowired
     private SessionFactory sessionFactory;
 
-    /**
-     *
-     */
-    public SWORDProviderService() {
-        abdera = new Abdera();
-    }
+    @Autowired
+    private NodeService nodeService;
+
+    @Autowired
+    private ContainerService containerService;
 
     /**
      * Service intitialization
      *
-     * @throws RepositoryException the repository exception
+     * @throws RuntimeException if initialization failes.
      */
     @PostConstruct
-    public void init() throws RepositoryException {
-        /* check if set root node exists */
+    private void init() {
         final Session session = sessionFactory.getInternalSession();
+        registerNamespace(session);
+        initializeContainer(session, SWORD_ROOT_PATH, "SWORD root");
+        initializeContainer(session, SWORD_WORKSPACES_PATH, "SWORD workspaces");
+        initializeContainer(session, SWORD_COLLECTIONS_PATH, "SWORD collections");
+    }
 
-        final NamespaceRegistry namespaceRegistry =
-                (org.modeshape.jcr.api.NamespaceRegistry) session.getWorkspace().getNamespaceRegistry();
+    private void initializeContainer(final Session session, final String path, final String label) {
+        try {
+            if (!nodeService.exists(session, path)) {
+                log.info("Initializing " + label + " container {}", path);
+                containerService.findOrCreate(session, path);
+                session.save();
+            }
+        } catch (RepositoryException e) {
+            throw new RuntimeException("Failed to initialize " + label + " container", e);
+        }
+    }
 
-        // Register the sword namespace if it's not found
-        if (!namespaceRegistry.isRegisteredPrefix(RDF_PREFIX)) {
-            namespaceRegistry.registerNamespace(RDF_PREFIX, NS_SWORD);
+    private void registerNamespace(final Session session) {
+        try {
+            final NamespaceRegistry namespaceRegistry;
+            namespaceRegistry = (NamespaceRegistry) session.getWorkspace().getNamespaceRegistry();
+
+            // Register the sword namespace if it's not found
+            if (!namespaceRegistry.isRegisteredPrefix(RDF_PREFIX)) {
+                namespaceRegistry.registerNamespace(RDF_PREFIX, NS_SWORD);
+            }
+        } catch (RepositoryException e) {
+            throw new RuntimeException("Failed to register SWORD namespace", e);
         }
     }
 
     /**
-     *
      * @return
      */
     public Service serviceDocument() {
         final Service service = abdera.newService();
-        service.addSimpleExtension(
-                "http://purl.org/net/sword/terms/",
-                "version",
-                "sword",
-                "2.0");
+        service.addSimpleExtension(NS_SWORD_TERMS, "version", "sword", "2.0");
         return service;
     }
 

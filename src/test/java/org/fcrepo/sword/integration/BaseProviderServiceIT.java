@@ -69,4 +69,5 @@ public abstract class BaseProviderServiceIT {
         final HttpResponse response = httpClient.execute(get);
         assertStatusCode(200, response);
     }
+
 }
