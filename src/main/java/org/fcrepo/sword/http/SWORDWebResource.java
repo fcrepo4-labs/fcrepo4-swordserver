@@ -30,7 +30,7 @@ import javax.ws.rs.Produces;
  */
 @Scope("request")
 @Path("/fcr:sword")
-public class SWORDServiceResource {
+public class SWORDWebResource {
 
     @Autowired
     private SWORDProviderService providerService;

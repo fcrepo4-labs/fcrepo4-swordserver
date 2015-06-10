@@ -40,7 +40,7 @@ import static org.junit.Assert.assertTrue;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("/spring-test/test-container.xml")
-public class SWORDProviderIT {
+public class SWORDProviderServiceIT {
 
     protected static final int SERVER_PORT = Integer.parseInt(System
             .getProperty("fcrepo.dynamic.test.port", "8080"));
