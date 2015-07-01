@@ -22,12 +22,21 @@
     </repository>
   </repositories>
 
-  <artifactId>fcrepo-swordserver</artifactId>
+  <artifactId>fcrepo4-swordserver</artifactId>
   <name>Fedora Repository SWORD Provider</name>
   <description>
     Service implementing a SWORD endpoint for Fedora Commons Repositories.
   </description>
   <packaging>bundle</packaging>
+
+  <scm>
+    <connection>scm:git:git://github.com/fcrepo4-labs/${project.artifactId}.git
+    </connection>
+    <developerConnection>scm:git:git@github.com:fcrepo4-labs/${project.artifactId}.git
+    </developerConnection>
+    <url>https://github.com/fcrepo4-labs/fcrepo4-swordserver</url>
+    <tag>HEAD</tag>
+  </scm>
 
   <dependencyManagement>
     <dependencies>
