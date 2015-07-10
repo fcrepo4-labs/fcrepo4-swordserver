@@ -70,4 +70,9 @@ public abstract class BaseProviderServiceIT {
         assertStatusCode(200, response);
     }
 
+    protected HttpResponse requestServiceDocument() throws IOException {
+        final HttpGet get = new HttpGet(serverAddress);
+        get.setHeader("Content-Type", "application/svc+xml");
+        return httpClient.execute(get);
+    }
 }

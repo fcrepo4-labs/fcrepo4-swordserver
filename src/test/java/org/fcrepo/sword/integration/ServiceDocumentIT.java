@@ -17,7 +17,6 @@ package org.fcrepo.sword.integration;
 
 import org.apache.abdera.model.Service;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpGet;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -25,6 +24,7 @@ import java.io.IOException;
 import static org.fcrepo.sword.integration.Assert.assertContentType;
 import static org.fcrepo.sword.integration.Assert.assertStatusCode;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 /**
  * @author claussni
@@ -33,23 +33,35 @@ public class ServiceDocumentIT extends BaseProviderServiceIT {
 
     @Test
     public void returnsAtomServiceDocumentMediaType() throws IOException {
-        final HttpGet get = new HttpGet(serverAddress);
-        get.setHeader("Content-Type", "application/svc+xml");
-        final HttpResponse response = httpClient.execute(get);
+        final HttpResponse response = requestServiceDocument();
         assertStatusCode(200, response);
         assertContentType("application/atomsvc+xml", response);
     }
 
     @Test
-    public void hasSwordVersion2() throws IOException {
-        final HttpGet get = new HttpGet(serverAddress);
-        get.setHeader("Content-Type", "application/svc+xml");
-        final HttpResponse response = httpClient.execute(get);
-        final Service      service  = serviceDocumentFromStream(response.getEntity().getContent());
+    public void specifiesSwordVersion2() throws IOException {
+        final HttpResponse response = requestServiceDocument();
+        final Service service = serviceDocumentFromStream(response.getEntity().getContent());
         assertEquals("2.0", service.getSimpleExtension(
                 "http://purl.org/net/sword/terms/",
                 "version",
                 "sword"));
     }
 
+    @Test
+    public void specifiesMaxUploadSizeAsInteger() throws IOException {
+        final HttpResponse response = requestServiceDocument();
+        final Service service = serviceDocumentFromStream(response.getEntity().getContent());
+        try {
+            final int maxUploadSize = Integer.parseUnsignedInt(service.getSimpleExtension(
+                    "http://purl.org/net/sword/terms/",
+                    "maxUploadSize",
+                    "sword"));
+            assertEquals("Expected default value for sword:maxUploadSize", Integer.MAX_VALUE, maxUploadSize);
+        } catch (NumberFormatException e) {
+            fail("sword:maxUploadSize is not an Integer");
+        }
+    }
+
 }
+

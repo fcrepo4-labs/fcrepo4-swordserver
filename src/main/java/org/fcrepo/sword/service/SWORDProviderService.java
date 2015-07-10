@@ -158,6 +158,8 @@ public class SWORDProviderService {
     public Service serviceDocument() {
         final Service service = abdera.newService();
         service.addSimpleExtension(NS_SWORD_TERMS, "version", "sword", SWORD_VERSION);
+        service.addSimpleExtension(NS_SWORD_TERMS, "maxUploadSize", "sword",
+                String.valueOf(SWORD_MAX_UPLOAD_SIZE_KB));
         return service;
     }
 
