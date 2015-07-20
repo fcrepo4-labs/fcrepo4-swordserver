@@ -19,9 +19,9 @@ import com.hp.hpl.jena.rdf.model.Property;
 import org.apache.abdera.Abdera;
 import org.apache.abdera.model.Service;
 import org.fcrepo.http.commons.session.SessionFactory;
-import org.fcrepo.kernel.models.Container;
-import org.fcrepo.kernel.services.ContainerService;
-import org.fcrepo.kernel.services.NodeService;
+import org.fcrepo.kernel.api.models.Container;
+import org.fcrepo.kernel.api.services.ContainerService;
+import org.fcrepo.kernel.api.services.NodeService;
 import org.modeshape.jcr.api.NamespaceRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +35,7 @@ import java.util.Map;
 
 import static com.hp.hpl.jena.rdf.model.ResourceFactory.createProperty;
 import static java.util.Collections.emptyMap;
-import static org.fcrepo.kernel.impl.rdf.converters.PropertyConverter.getPropertyNameFromPredicate;
+import static org.fcrepo.kernel.modeshape.rdf.converters.PropertyConverter.getPropertyNameFromPredicate;
 
 /**
  * @author claussni

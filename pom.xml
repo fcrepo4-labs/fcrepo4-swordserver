@@ -64,7 +64,7 @@
 
     <dependency>
       <groupId>org.fcrepo</groupId>
-      <artifactId>fcrepo-kernel</artifactId>
+      <artifactId>fcrepo-kernel-api</artifactId>
       <version>${project.version}</version>
     </dependency>
 
