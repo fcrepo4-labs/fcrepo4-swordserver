@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.fcrepo</groupId>
     <artifactId>fcrepo</artifactId>
-    <version>4.3.0</version>
+    <version>4.3.1-SNAPSHOT</version>
   </parent>
 
   <repositories>
@@ -34,7 +34,7 @@
     <developerConnection>scm:git:git@github.com:fcrepo4-labs/${project.artifactId}.git
     </developerConnection>
     <url>https://github.com/fcrepo4-labs/fcrepo4-swordserver</url>
-    <tag>fcrepo4-swordserver-4.3.0</tag>
+    <tag>HEAD</tag>
   </scm>
 
   <dependencyManagement>
@@ -58,13 +58,13 @@
     <dependency>
       <groupId>org.fcrepo</groupId>
       <artifactId>fcrepo-http-commons</artifactId>
-      <version>4.3.0</version>
+      <version>4.3.1-SNAPSHOT</version>
     </dependency>
 
     <dependency>
       <groupId>org.fcrepo</groupId>
       <artifactId>fcrepo-kernel-api</artifactId>
-      <version>4.3.0</version>
+      <version>4.3.1-SNAPSHOT</version>
     </dependency>
 
     <!--
@@ -110,7 +110,7 @@
     <dependency>
       <groupId>org.fcrepo</groupId>
       <artifactId>fcrepo-http-commons</artifactId>
-      <version>4.3.0</version>
+      <version>4.3.1-SNAPSHOT</version>
       <scope>test</scope>
       <type>test-jar</type>
     </dependency>
@@ -118,21 +118,21 @@
     <dependency>
       <groupId>org.fcrepo</groupId>
       <artifactId>fcrepo-configs</artifactId>
-      <version>4.3.0</version>
+      <version>4.3.1-SNAPSHOT</version>
       <scope>test</scope>
     </dependency>
 
     <dependency>
       <groupId>org.fcrepo</groupId>
       <artifactId>fcrepo-auth-common</artifactId>
-      <version>4.3.0</version>
+      <version>4.3.1-SNAPSHOT</version>
       <scope>test</scope>
     </dependency>
 
     <dependency>
       <groupId>org.fcrepo</groupId>
       <artifactId>fcrepo-http-api</artifactId>
-      <version>4.3.0</version>
+      <version>4.3.1-SNAPSHOT</version>
       <scope>test</scope>
     </dependency>
 
