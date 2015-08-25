@@ -28,14 +28,10 @@
   </description>
   <packaging>bundle</packaging>
 
-  <scm>
-    <connection>scm:git:git://github.com/fcrepo4-labs/${project.artifactId}.git
-    </connection>
-    <developerConnection>scm:git:git@github.com:fcrepo4-labs/${project.artifactId}.git
-    </developerConnection>
-    <url>https://github.com/fcrepo4-labs/fcrepo4-swordserver</url>
-    <tag>HEAD</tag>
-  </scm>
+  <properties>
+    <project_name>fcrepo4-swordserver</project_name>
+    <project_organization>fcrepo4-labs</project_organization>
+  </properties>
 
   <dependencyManagement>
     <dependencies>
@@ -80,7 +76,17 @@
           <groupId>commons-logging</groupId>
           <artifactId>commons-logging</artifactId>
         </exclusion>
+        <exclusion>
+          <groupId>jaxen</groupId>
+          <artifactId>jaxen</artifactId>
+        </exclusion>
       </exclusions>
+    </dependency>
+
+    <dependency>
+      <groupId>jaxen</groupId>
+      <artifactId>jaxen</artifactId>
+      <version>1.1.4</version>
     </dependency>
 
     <!--
