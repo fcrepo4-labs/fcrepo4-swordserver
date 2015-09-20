@@ -1,12 +1,12 @@
 /**
  * Copyright 2015 DuraSpace, Inc.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,6 +20,7 @@ import org.apache.abdera.Abdera;
 import org.apache.abdera.model.Service;
 import org.fcrepo.http.commons.session.SessionFactory;
 import org.fcrepo.kernel.api.models.Container;
+import org.fcrepo.kernel.api.models.FedoraResource;
 import org.fcrepo.kernel.api.services.ContainerService;
 import org.fcrepo.kernel.api.services.NodeService;
 import org.modeshape.jcr.api.NamespaceRegistry;
@@ -31,6 +32,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
+import javax.jcr.Value;
 import java.util.Map;
 
 import static com.hp.hpl.jena.rdf.model.ResourceFactory.createProperty;
@@ -66,6 +68,9 @@ public class SWORDProviderService {
     @Autowired
     private ContainerService containerService;
 
+    private Container workspacesContainer;
+    private Container collectionsContainer;
+
     /**
      * Service intitialization
      *
@@ -77,8 +82,8 @@ public class SWORDProviderService {
         registerNamespace(session);
         final Container root = initializeContainer(session, SWORD_ROOT_PATH, "SWORD root");
         ensureDefaultProperties(session, root);
-        initializeContainer(session, SWORD_WORKSPACES_PATH, "SWORD workspaces");
-        initializeContainer(session, SWORD_COLLECTIONS_PATH, "SWORD collections");
+        workspacesContainer = initializeContainer(session, SWORD_WORKSPACES_PATH, "SWORD workspaces");
+        collectionsContainer = initializeContainer(session, SWORD_COLLECTIONS_PATH, "SWORD collections");
     }
 
     private void ensureDefaultProperties(final Session session, final Container root) {
@@ -153,15 +158,40 @@ public class SWORDProviderService {
     }
 
     /**
-     * @return
+     * Build and return a SWORD service document.
+     *
+     * @return SWORD service document
      */
     public Service serviceDocument() {
         final Service service = abdera.newService();
         service.addSimpleExtension(NS_SWORD_TERMS, "version", "sword", SWORD_VERSION);
         service.addSimpleExtension(NS_SWORD_TERMS, "maxUploadSize", "sword",
                 String.valueOf(SWORD_MAX_UPLOAD_SIZE_KB));
+
+        workspacesContainer.getChildren().forEachRemaining(
+                fedoraResource -> {
+                    addWorkspaces(service, fedoraResource);
+                });
+
         return service;
     }
 
+    private void addWorkspaces(Service service, FedoraResource fedoraResource) {
+        try {
+            Value[] dcTitles = fedoraResource.getProperty("dc:title").getValues();
+            if (dcTitles.length > 0) {
+                try {
+                    String title = dcTitles[0].getString();
+                    if (!title.isEmpty()) service.addWorkspace(title);
+                } catch (IndexOutOfBoundsException | NullPointerException e) {
+                    log.warn("Found workspace container without dc:title property: "
+                            + fedoraResource.getPath());
+                }
+            }
+        } catch (RepositoryException e) {
+            log.warn("Found workspace container with invalid dc:title property: "
+                    + fedoraResource.getPath());
+        }
+    }
 
 }

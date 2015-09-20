@@ -1,12 +1,12 @@
 /**
  * Copyright 2015 DuraSpace, Inc.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -21,7 +21,10 @@ import org.apache.abdera.model.Service;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.fcrepo.sword.service.SWORDProviderService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -53,7 +56,7 @@ public abstract class BaseProviderServiceIT {
     protected HttpClient httpClient;
 
     protected Service serviceDocumentFromStream(final InputStream content) {
-        final Abdera            abdera          = new Abdera();
+        final Abdera abdera = new Abdera();
         final Document<Service> serviceDocument = abdera.getParser().parse(content);
         return serviceDocument.getRoot();
     }
@@ -65,7 +68,7 @@ public abstract class BaseProviderServiceIT {
 
     @Test
     public void fedoraRepositoryIsResponding() throws IOException {
-        final HttpGet      get      = new HttpGet(String.format("http://%s:%s/", HOSTNAME, SERVER_PORT));
+        final HttpGet get = new HttpGet(String.format("http://%s:%s/", HOSTNAME, SERVER_PORT));
         final HttpResponse response = httpClient.execute(get);
         assertStatusCode(200, response);
     }
@@ -74,5 +77,17 @@ public abstract class BaseProviderServiceIT {
         final HttpGet get = new HttpGet(serverAddress);
         get.setHeader("Content-Type", "application/svc+xml");
         return httpClient.execute(get);
+    }
+
+    protected HttpResponse createWorkspaceNode(String title) throws IOException {
+        final HttpPost post = new HttpPost(String.format("http://%s:%s/%s/",
+                HOSTNAME,
+                SERVER_PORT,
+                SWORDProviderService.SWORD_WORKSPACES_PATH));
+        post.setHeader("Content-Type", "text/turtle");
+        post.setEntity(new StringEntity(
+                String.format("PREFIX dc: <http://purl.org/dc/elements/1.1/>\n" +
+                        "<> dc:title \"%s\"", title)));
+        return httpClient.execute(post);
     }
 }
