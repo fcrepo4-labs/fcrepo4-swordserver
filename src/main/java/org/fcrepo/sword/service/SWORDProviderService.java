@@ -57,8 +57,6 @@ public class SWORDProviderService {
     private static final String  RDF_PREFIX               = "sword";
     private static final String  SWORD_ROOT_LABEL         = "SWORD root";
     private static final String  SWORD_VERSION            = "2.0";
-    private static final Boolean SWORD_SUPPORTS_VERBOSE   = true;
-    private static final Boolean SWORD_SUPPORTS_NOOP      = true;
     private static final Integer SWORD_MAX_UPLOAD_SIZE_KB = Integer.MAX_VALUE;
 
     private static final Logger log    = LoggerFactory.getLogger(SWORDProviderService.class);
@@ -114,9 +112,8 @@ public class SWORDProviderService {
         ensureSwordNamespaceRegistration(namespaceRegistry);
 
         final Container root = getContainer(session, SWORD_ROOT_PATH, SWORD_ROOT_LABEL);
-        ensureProperty(namespaceRegistry, root, RdfLexicon.FEDORA_CONFIG_NAMESPACE + "supportsVerbose", SWORD_SUPPORTS_VERBOSE);
-        ensureProperty(namespaceRegistry, root, RdfLexicon.FEDORA_CONFIG_NAMESPACE + "supportsNoop", SWORD_SUPPORTS_NOOP);
-        ensureProperty(namespaceRegistry, root, RdfLexicon.FEDORA_CONFIG_NAMESPACE + "maxUploadSizeInKb", SWORD_MAX_UPLOAD_SIZE_KB);
+        ensureProperty(namespaceRegistry, root,
+                RdfLexicon.FEDORA_CONFIG_NAMESPACE + "maxUploadSizeInKb", SWORD_MAX_UPLOAD_SIZE_KB);
 
         workspaces = getContainer(session, SWORD_WORKSPACES_PATH, "SWORD workspaces");
         getContainer(session, SWORD_COLLECTIONS_PATH, "SWORD collections");
