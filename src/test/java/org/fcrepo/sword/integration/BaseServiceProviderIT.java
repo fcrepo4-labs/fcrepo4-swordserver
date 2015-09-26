@@ -24,7 +24,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.fcrepo.sword.service.SWORDProviderService;
+import org.fcrepo.sword.provider.SWORDServiceProvider;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -41,7 +41,7 @@ import static org.fcrepo.sword.integration.Assert.assertStatusCode;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("/spring-test/test-container.xml")
-public abstract class BaseProviderServiceIT {
+public abstract class BaseServiceProviderIT {
 
     protected static final int SERVER_PORT = Integer.parseInt(System
             .getProperty("fcrepo.dynamic.test.port", "8080"));
@@ -83,7 +83,7 @@ public abstract class BaseProviderServiceIT {
         final HttpPost post = new HttpPost(String.format("http://%s:%s/%s/",
                 HOSTNAME,
                 SERVER_PORT,
-                SWORDProviderService.SWORD_WORKSPACES_PATH));
+                SWORDServiceProvider.SWORD_WORKSPACES_PATH));
         post.setHeader("Content-Type", "text/turtle");
         post.setEntity(new StringEntity(
                 String.format("PREFIX dc: <http://purl.org/dc/elements/1.1/>\n" +

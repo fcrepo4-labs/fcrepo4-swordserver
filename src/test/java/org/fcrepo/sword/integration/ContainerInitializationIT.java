@@ -17,7 +17,7 @@ package org.fcrepo.sword.integration;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
-import org.fcrepo.sword.service.SWORDProviderService;
+import org.fcrepo.sword.provider.SWORDServiceProvider;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -27,14 +27,14 @@ import static org.fcrepo.sword.integration.Assert.assertStatusCode;
 /**
  * @author claussni
  */
-public class ContainerInitializationIT extends BaseProviderServiceIT {
+public class ContainerInitializationIT extends BaseServiceProviderIT {
 
     @Test
     public void initializesRootContainer() throws IOException {
         final HttpGet get = new HttpGet(String.format("http://%s:%s/%s",
                 HOSTNAME,
                 SERVER_PORT,
-                SWORDProviderService.SWORD_ROOT_PATH));
+                SWORDServiceProvider.SWORD_ROOT_PATH));
         final HttpResponse response = httpClient.execute(get);
         assertStatusCode(200, response);
     }
@@ -44,7 +44,7 @@ public class ContainerInitializationIT extends BaseProviderServiceIT {
         final HttpGet get = new HttpGet(String.format("http://%s:%s/%s",
                 HOSTNAME,
                 SERVER_PORT,
-                SWORDProviderService.SWORD_WORKSPACES_PATH));
+                SWORDServiceProvider.SWORD_WORKSPACES_PATH));
         final HttpResponse response = httpClient.execute(get);
         assertStatusCode(200, response);
     }
@@ -54,7 +54,7 @@ public class ContainerInitializationIT extends BaseProviderServiceIT {
         final HttpGet get = new HttpGet(String.format("http://%s:%s/%s",
                 HOSTNAME,
                 SERVER_PORT,
-                SWORDProviderService.SWORD_COLLECTIONS_PATH));
+                SWORDServiceProvider.SWORD_COLLECTIONS_PATH));
         final HttpResponse response = httpClient.execute(get);
         assertStatusCode(200, response);
     }

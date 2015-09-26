@@ -13,17 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.fcrepo.sword.service;
+package org.fcrepo.sword.provider;
 
 import org.apache.abdera.Abdera;
 import org.apache.abdera.model.Service;
 import org.fcrepo.http.commons.session.SessionFactory;
 import org.fcrepo.kernel.api.RdfLexicon;
 import org.fcrepo.kernel.api.models.Container;
-import org.fcrepo.kernel.api.models.FedoraResource;
 import org.fcrepo.kernel.api.services.ContainerService;
 import org.fcrepo.kernel.api.services.NodeService;
 import org.fcrepo.kernel.api.utils.NamespaceTools;
+import org.fcrepo.sword.protocol.SWORDServiceDocumentBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,12 +33,12 @@ import javax.annotation.PostConstruct;
 import javax.jcr.NamespaceRegistry;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
-import javax.jcr.Value;
 import java.util.Map;
 
 import static com.hp.hpl.jena.rdf.model.ResourceFactory.createProperty;
 import static java.util.Collections.emptyMap;
 import static org.fcrepo.kernel.modeshape.rdf.converters.PropertyConverter.getPropertyNameFromPredicate;
+import static org.fcrepo.sword.protocol.SWORDProtocol.SWORD_NAMESPACE;
 
 /**
  * Implements all protocol related methods to be executed via {@link org.fcrepo.sword.http.SWORDWebResource}
@@ -46,20 +46,17 @@ import static org.fcrepo.kernel.modeshape.rdf.converters.PropertyConverter.getPr
  * @author claussni
  */
 @Component
-public class SWORDProviderService {
+public class SWORDServiceProvider {
 
     public static final String SWORD_ROOT_PATH        = "/sword";
     public static final String SWORD_COLLECTIONS_PATH = SWORD_ROOT_PATH + "/collections";
     public static final String SWORD_WORKSPACES_PATH  = SWORD_ROOT_PATH + "/workspaces";
 
-    private static final String  NS_SWORD                 = "http://purl.org/net/sword/";
-    private static final String  NS_SWORD_TERMS           = "http://purl.org/net/sword/terms/";
     private static final String  RDF_PREFIX               = "sword";
     private static final String  SWORD_ROOT_LABEL         = "SWORD root";
-    private static final String  SWORD_VERSION            = "2.0";
     private static final Integer SWORD_MAX_UPLOAD_SIZE_KB = Integer.MAX_VALUE;
 
-    private static final Logger log    = LoggerFactory.getLogger(SWORDProviderService.class);
+    private static final Logger log    = LoggerFactory.getLogger(SWORDServiceProvider.class);
     private final        Abdera abdera = new Abdera();
 
     @Autowired
@@ -74,39 +71,20 @@ public class SWORDProviderService {
     private Container workspaces;
 
     /**
-     * Build and return a SWORD service document.
+     * Build and return a SWORD service document
      *
      * @return SWORD service document
      */
     public Service serviceDocument() {
-        final Service service = abdera.newService();
-        service.addSimpleExtension(NS_SWORD_TERMS, "version", "sword", SWORD_VERSION);
-        service.addSimpleExtension(NS_SWORD_TERMS, "maxUploadSize", "sword", String.valueOf(SWORD_MAX_UPLOAD_SIZE_KB));
-        workspaces.getChildren().forEachRemaining(fedoraResource -> addWorkspaces(service, fedoraResource));
-        return service;
-    }
-
-    private void addWorkspaces(final Service service, final FedoraResource fedoraResource) {
-        try {
-            final Value[] dcTitles = fedoraResource.getProperty("dc:title").getValues();
-            if (dcTitles.length > 0) {
-                try {
-                    final String title = dcTitles[0].getString();
-                    if (!title.isEmpty()) {
-                        service.addWorkspace(title);
-                    }
-                } catch (IndexOutOfBoundsException | NullPointerException e) {
-                    log.warn("Found workspace container without dc:title property: {}", fedoraResource.getPath());
-                }
-            }
-        } catch (RepositoryException e) {
-            log.warn("Found workspace container with invalid dc:title property: {}", fedoraResource.getPath());
-        }
+        final SWORDServiceDocumentBuilder sb = new SWORDServiceDocumentBuilder(abdera, log)
+                .maxUploadSize(SWORD_MAX_UPLOAD_SIZE_KB)
+                .workspacesContainer(workspaces);
+        return sb.serviceDocument();
     }
 
     @PostConstruct
     private void init() {
-        final Session           session           = sessionFactory.getInternalSession();
+        final Session session = sessionFactory.getInternalSession();
         final NamespaceRegistry namespaceRegistry = NamespaceTools.getNamespaceRegistry(session);
 
         ensureSwordNamespaceRegistration(namespaceRegistry);
@@ -121,10 +99,10 @@ public class SWORDProviderService {
 
     private void ensureSwordNamespaceRegistration(final NamespaceRegistry namespaceRegistry) {
         try {
-            namespaceRegistry.registerNamespace(RDF_PREFIX, NS_SWORD);
+            namespaceRegistry.registerNamespace(RDF_PREFIX, SWORD_NAMESPACE);
         } catch (RepositoryException e) {
             throw new RuntimeException(
-                    String.format("Failed to register namespace %s:%s", RDF_PREFIX, NS_SWORD), e);
+                    String.format("Failed to register namespace %s:%s", RDF_PREFIX, SWORD_NAMESPACE), e);
         }
     }
 

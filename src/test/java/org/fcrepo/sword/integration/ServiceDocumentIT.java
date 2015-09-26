@@ -31,7 +31,7 @@ import static org.junit.Assert.fail;
 /**
  * @author claussni
  */
-public class ServiceDocumentIT extends BaseProviderServiceIT {
+public class ServiceDocumentIT extends BaseServiceProviderIT {
 
     @Test
     public void returnsAtomServiceDocumentMediaType() throws IOException {

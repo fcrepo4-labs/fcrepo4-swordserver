@@ -16,7 +16,7 @@
 package org.fcrepo.sword.http;
 
 import org.apache.abdera.model.Service;
-import org.fcrepo.sword.service.SWORDProviderService;
+import org.fcrepo.sword.provider.SWORDServiceProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 
@@ -32,7 +32,7 @@ import javax.ws.rs.Produces;
 public class SWORDWebResource {
 
     @Autowired
-    private SWORDProviderService providerService;
+    private SWORDServiceProvider providerService;
 
     /**
      * @return Returns a SWORD service document
