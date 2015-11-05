@@ -31,6 +31,7 @@
   <properties>
     <project_name>fcrepo4-swordserver</project_name>
     <project_organization>fcrepo4-labs</project_organization>
+    <fcrepo.version>4.4.1-SNAPSHOT</fcrepo.version>
   </properties>
 
   <dependencyManagement>
@@ -38,7 +39,7 @@
       <dependency>
         <groupId>org.fcrepo</groupId>
         <artifactId>fcrepo-jcr-bom</artifactId>
-        <version>${project.version}</version>
+        <version>${fcrepo.version}</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
