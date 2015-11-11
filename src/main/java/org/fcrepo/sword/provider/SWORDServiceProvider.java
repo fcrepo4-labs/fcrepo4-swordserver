@@ -22,7 +22,7 @@ import org.fcrepo.kernel.api.RdfLexicon;
 import org.fcrepo.kernel.api.models.Container;
 import org.fcrepo.kernel.api.services.ContainerService;
 import org.fcrepo.kernel.api.services.NodeService;
-import org.fcrepo.kernel.api.utils.NamespaceTools;
+import org.fcrepo.kernel.modeshape.utils.NamespaceTools;
 import org.fcrepo.sword.protocol.SWORDServiceDocumentBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
