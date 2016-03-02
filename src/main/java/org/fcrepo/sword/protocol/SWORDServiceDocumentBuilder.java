@@ -82,13 +82,13 @@ public class SWORDServiceDocumentBuilder {
         final Service service = abdera.newService();
         service.addSimpleExtension(SWORD_TERMS_NAMESPACE, "version", "sword", SWORD_VERSION);
         service.addSimpleExtension(SWORD_TERMS_NAMESPACE, "maxUploadSize", "sword", String.valueOf(maxUploadSize));
-        workspaces.getChildren().forEachRemaining(fedoraResource -> addWorkspace(service, fedoraResource));
+        workspaces.getChildren().forEach(fedoraResource -> addWorkspace(service, fedoraResource));
         return service;
     }
 
     private void addWorkspace(final Service service, final FedoraResource fedoraResource) {
         try {
-            final Value[] dcTitles = fedoraResource.getProperty("dc:title").getValues();
+            final Value[] dcTitles = fedoraResource.getNode().getProperty("dc:title").getValues();
             if (dcTitles.length > 0) {
                 try {
                     final String title = dcTitles[0].getString();
