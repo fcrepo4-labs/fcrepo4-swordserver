@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.fcrepo</groupId>
     <artifactId>fcrepo</artifactId>
-    <version>4.5.1-SNAPSHOT</version>
+    <version>4.5.1</version>
   </parent>
 
   <repositories>
@@ -31,7 +31,7 @@
   <properties>
     <project_name>fcrepo4-swordserver</project_name>
     <project_organization>fcrepo4-labs</project_organization>
-    <fcrepo.version>4.5.1-SNAPSHOT</fcrepo.version>
+    <fcrepo.version>4.5.1</fcrepo.version>
   </properties>
 
   <dependencyManagement>
