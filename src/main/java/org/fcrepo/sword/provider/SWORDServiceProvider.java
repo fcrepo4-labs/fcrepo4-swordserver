@@ -24,6 +24,7 @@ import org.fcrepo.kernel.api.RdfLexicon;
 import org.fcrepo.kernel.api.models.Container;
 import org.fcrepo.kernel.api.services.ContainerService;
 import org.fcrepo.kernel.api.services.NodeService;
+import org.fcrepo.kernel.modeshape.FedoraResourceImpl;
 import org.fcrepo.kernel.modeshape.utils.NamespaceTools;
 import org.fcrepo.sword.protocol.SWORDServiceDocumentBuilder;
 import org.slf4j.Logger;
@@ -133,8 +134,12 @@ public class SWORDServiceProvider {
                     (org.modeshape.jcr.api.NamespaceRegistry) namespaceRegistry,
                     createProperty(name),
                     namespaceMapping);
-            if (!container.getNode().hasProperty(propertyName)) {
-                container.getNode().setProperty(propertyName, String.valueOf(defaultValue));
+
+            // FIXME Setting container property bypassing the API
+            final FedoraResourceImpl containerNode = (FedoraResourceImpl) container;
+
+            if (!containerNode.hasProperty(propertyName)) {
+                containerNode.getNode().setProperty(propertyName, String.valueOf(defaultValue));
             }
         } catch (RepositoryException e) {
             throw new RuntimeException("Failed to initialize property " + name, e);

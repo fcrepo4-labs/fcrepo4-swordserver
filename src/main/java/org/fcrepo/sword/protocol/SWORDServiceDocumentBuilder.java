@@ -21,6 +21,7 @@ import org.apache.abdera.Abdera;
 import org.apache.abdera.model.Service;
 import org.fcrepo.kernel.api.models.Container;
 import org.fcrepo.kernel.api.models.FedoraResource;
+import org.fcrepo.kernel.modeshape.FedoraResourceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -90,7 +91,10 @@ public class SWORDServiceDocumentBuilder {
 
     private void addWorkspace(final Service service, final FedoraResource fedoraResource) {
         try {
-            final Value[] dcTitles = fedoraResource.getNode().getProperty("dc:title").getValues();
+            // FIXME Setting container property bypassing the API
+            final FedoraResourceImpl resourceNode = (FedoraResourceImpl) fedoraResource;
+
+            final Value[] dcTitles = resourceNode.getNode().getProperty("dc:title").getValues();
             if (dcTitles.length > 0) {
                 try {
                     final String title = dcTitles[0].getString();
