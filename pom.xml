@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.fcrepo</groupId>
     <artifactId>fcrepo</artifactId>
-    <version>4.6.0</version>
+    <version>4.7.1</version>
   </parent>
 
   <repositories>
@@ -31,7 +31,9 @@
   <properties>
     <project_name>fcrepo4-swordserver</project_name>
     <project_organization>fcrepo4-labs</project_organization>
-    <fcrepo.version>4.6.0</fcrepo.version>
+    <fcrepo.version>4.7.1</fcrepo.version>
+    <!-- FIXME The default value is empty which keeps the server from starting. -->
+    <fcrepo.dynamic.test.port>8080</fcrepo.dynamic.test.port>
   </properties>
 
   <dependencyManagement>
@@ -62,6 +64,14 @@
       <groupId>org.fcrepo</groupId>
       <artifactId>fcrepo-kernel-api</artifactId>
       <version>${fcrepo.version}</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.fcrepo</groupId>
+      <artifactId>fcrepo-kernel-modeshape</artifactId>
+      <version>${fcrepo.version}</version>
+      <scope>provided</scope>
     </dependency>
 
     <!--

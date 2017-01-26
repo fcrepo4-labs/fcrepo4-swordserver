@@ -20,10 +20,10 @@ package org.fcrepo.sword.provider;
 import org.apache.abdera.Abdera;
 import org.apache.abdera.model.Service;
 import org.fcrepo.http.commons.session.SessionFactory;
+import org.fcrepo.kernel.api.FedoraSession;
 import org.fcrepo.kernel.api.RdfLexicon;
 import org.fcrepo.kernel.api.models.Container;
 import org.fcrepo.kernel.api.services.ContainerService;
-import org.fcrepo.kernel.api.services.NodeService;
 import org.fcrepo.kernel.modeshape.FedoraResourceImpl;
 import org.fcrepo.kernel.modeshape.utils.NamespaceTools;
 import org.fcrepo.sword.protocol.SWORDServiceDocumentBuilder;
@@ -38,8 +38,9 @@ import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import java.util.Map;
 
-import static com.hp.hpl.jena.rdf.model.ResourceFactory.createProperty;
 import static java.util.Collections.emptyMap;
+import static org.apache.jena.rdf.model.ResourceFactory.createProperty;
+import static org.fcrepo.kernel.modeshape.FedoraSessionImpl.getJcrSession;
 import static org.fcrepo.kernel.modeshape.rdf.converters.PropertyConverter.getPropertyNameFromPredicate;
 import static org.fcrepo.sword.protocol.SWORDProtocol.SWORD_NAMESPACE;
 
@@ -66,9 +67,6 @@ public class SWORDServiceProvider {
     private SessionFactory sessionFactory;
 
     @Autowired
-    private NodeService nodeService;
-
-    @Autowired
     private ContainerService containerService;
 
     private Container workspaces;
@@ -87,17 +85,19 @@ public class SWORDServiceProvider {
 
     @PostConstruct
     private void init() {
-        final Session session = sessionFactory.getInternalSession();
-        final NamespaceRegistry namespaceRegistry = NamespaceTools.getNamespaceRegistry(session);
+        final FedoraSession fedoraSession = sessionFactory.getInternalSession();
+        final Session       jcrSession    = getJcrSession(fedoraSession);
+
+        final NamespaceRegistry namespaceRegistry = NamespaceTools.getNamespaceRegistry(jcrSession);
 
         ensureSwordNamespaceRegistration(namespaceRegistry);
 
-        final Container root = getContainer(session, SWORD_ROOT_PATH, SWORD_ROOT_LABEL);
+        final Container root = getContainer(fedoraSession, SWORD_ROOT_PATH, SWORD_ROOT_LABEL);
         ensureProperty(namespaceRegistry, root,
                 RdfLexicon.FEDORA_CONFIG_NAMESPACE + "maxUploadSizeInKb", SWORD_MAX_UPLOAD_SIZE_KB);
 
-        workspaces = getContainer(session, SWORD_WORKSPACES_PATH, "SWORD workspaces");
-        getContainer(session, SWORD_COLLECTIONS_PATH, "SWORD collections");
+        workspaces = getContainer(fedoraSession, SWORD_WORKSPACES_PATH, "SWORD workspaces");
+        getContainer(fedoraSession, SWORD_COLLECTIONS_PATH, "SWORD collections");
     }
 
     private void ensureSwordNamespaceRegistration(final NamespaceRegistry namespaceRegistry) {
@@ -109,18 +109,11 @@ public class SWORDServiceProvider {
         }
     }
 
-    private Container getContainer(final Session session, final String path, final String label) {
-        try {
-            if (!nodeService.exists(session, path)) {
-                log.info("Initializing container `{}` at `{}`", label, path);
-                final Container c = containerService.findOrCreate(session, path);
-                session.save();
-                return c;
-            }
-        } catch (RepositoryException e) {
-            throw new RuntimeException("Failed to initialize container " + label, e);
-        }
-        return null;
+    private Container getContainer(final FedoraSession session, final String path, final String label) {
+        log.info("Initializing container `{}` at `{}`", label, path);
+        final Container c = containerService.findOrCreate(session, path);
+        session.commit();
+        return c;
     }
 
     private void ensureProperty(
@@ -142,6 +135,7 @@ public class SWORDServiceProvider {
                 containerNode.getNode().setProperty(propertyName, String.valueOf(defaultValue));
             }
         } catch (RepositoryException e) {
+            // TODO Is it really necessary to use RuntimeException here? Why?
             throw new RuntimeException("Failed to initialize property " + name, e);
         }
     }

@@ -45,19 +45,17 @@ import static org.fcrepo.sword.integration.Assert.assertStatusCode;
 @ContextConfiguration("/spring-test/test-container.xml")
 public abstract class BaseServiceProviderIT {
 
-    protected static final int SERVER_PORT = Integer.parseInt(System
-            .getProperty("fcrepo.dynamic.test.port", "8080"));
+    static final int SERVER_PORT = sytemPropertyOrDefault("fcrepo.dynamic.test.port", "8080");
+    static final String HOSTNAME = "localhost";
+    private static final String SERVICE_NAME = "fcr:sword";
+    HttpClient httpClient;
 
-    protected static final String HOSTNAME = "localhost";
+    private static int sytemPropertyOrDefault(final String key, final String def) {
+        String val = System.getProperty(key, "");
+        return Integer.parseInt((val.isEmpty()) ? def : val);
+    }
 
-    protected static final String SERVICE_NAME = "fcr:sword";
-
-    protected static final String serverAddress =
-            String.format("http://%s:%s/%s", HOSTNAME, SERVER_PORT, SERVICE_NAME);
-
-    protected HttpClient httpClient;
-
-    protected Service serviceDocumentFromStream(final InputStream content) {
+    Service serviceDocumentFromStream(final InputStream content) {
         final Abdera abdera = new Abdera();
         final Document<Service> serviceDocument = abdera.getParser().parse(content);
         return serviceDocument.getRoot();
@@ -76,7 +74,7 @@ public abstract class BaseServiceProviderIT {
     }
 
     protected HttpResponse requestServiceDocument() throws IOException {
-        final HttpGet get = new HttpGet(serverAddress);
+        final HttpGet get = new HttpGet(String.format("http://%s:%s/%s", HOSTNAME, SERVER_PORT, SERVICE_NAME));
         get.setHeader("Content-Type", "application/svc+xml");
         return httpClient.execute(get);
     }
