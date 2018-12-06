@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/fcrepo4-labs/fcrepo4-swordserver.svg)](https://travis-ci.org/fcrepo4-labs/fcrepo4-swordserver)
+[![Build Status](https://travis-ci.com/fcrepo4-labs/fcrepo4-swordserver.svg)](https://travis-ci.com/fcrepo4-labs/fcrepo4-swordserver)
 
 # SWORD Provider for Fedora 4
 
